@@ -9,9 +9,8 @@ import datetime as dt
 import inspect
 import json
 
-from app.models import User, Queue, Post
+from app.models import User, User, User
 from app.database import db_session
-
 
 bp = Blueprint("users", __name__)
 
@@ -20,28 +19,69 @@ bp = Blueprint("users", __name__)
 def getUsers():
     data = []
     page_offset = request.args.get("page", default=0, type=int)
-    page_limit = 2
+    page_limit = 10
 
-    # Database select
     with db_session() as s:
-        data_queues = s.query(Queue)
-        for queue in data_queues:
-            print(queue.id)
+        data_users = s.query(User).filter() \
+            .limit(page_limit) \
+            .offset(page_offset)
+        for user in data_users:
+            print(user.id)
+        data = [
+            {
+                "id": x.id,
+                "username": x.username
+            }
+            for x in data_users
+        ]
 
     return jsonify(data)
 
+
 @bp.route("/api/users", methods=["POST"])
-def postUsers():
-    paramUserName = request.form.get("username")
+def userUsers():
+    userName = request.form.get("user_name", type=str)
 
-    userName = "{}".format(paramUserName)
+    if userName:
+        with db_session() as s:
+            newUser = User(
+                username = userName,
+            )
+            s.add(newUser)
+            s.commit()
 
-    return { "msg": "User '{}' created.".format(userName) }, status.HTTP_201_CREATED
+            return { "msg": f"User '{userName}' created." }, status.HTTP_201_CREATED
 
-@bp.route("/api/users/<int:id>", methods=["PUT"])
-def putUsers():
-    return jsonify({})
+    return { f"msg": "An error occured on creating user." }, status.HTTP_401_BAD_REQUEST
 
-@bp.route("/api/users/<int:id>", methods=["DELETE"])
-def deleteUsers():
-    return jsonify({})
+
+@bp.route("/api/users/<int:userId>", methods=["PUT"])
+def putUsers(userId):
+    userName = request.form.get("user_name", type=str)
+
+    if userName:
+        with db_session() as s:
+            s.query(User).filter(
+                User.id == userId,
+            ).update({
+                User.username: userName,
+            })
+            s.commit()
+
+            return { "msg": f"User '{userId}' updated." }, status.HTTP_200_OK
+
+    return { f"msg": "An error occured on updating user." }, status.HTTP_401_BAD_REQUEST
+
+
+@bp.route("/api/users/<int:userId>", methods=["DELETE"])
+def deleteUsers(userId):
+    if userId: 
+        with db_session() as s:
+            s.query(User).filter(
+                User.id == userId,
+            ).delete()
+            s.commit()
+
+            return { "msg": f"User '{userId}' deleted." }, status.HTTP_200_OK
+
+    return { f"msg": "An error occured on deleting user." }, status.HTTP_401_BAD_REQUEST

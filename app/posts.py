@@ -66,24 +66,35 @@ def postPosts():
 def putPosts(postId):
     postTitle = request.form.get("post_title", type=str)
     postMessage = request.form.get("post_message", type=str)
-    queueId = request.form.get("queue_id", type=int)
+    #queueId = request.form.get("queue_id", type=int)
     #userId = request.form.get("user_id", default=1, type=int)
 
-    if postId and postTitle and postMessage and queueId:
+    if postId and postTitle and postMessage:
         with db_session() as s:
             s.query(Post).filter(
-                Post.id == postId,
-                Post.queue_id == queueId
+                Post.id == postId
             ).update({
                 Post.title: postTitle,
                 Post.message: postMessage
             })
             s.commit()
 
-            return { "msg": f"Post '{postId}' updated." }, status.HTTP_201_CREATED
+            return { "msg": f"Post '{postId}' updated." }, status.HTTP_200_OK
 
     return { f"msg": "An error occured on updating post." }, status.HTTP_401_BAD_REQUEST
 
-@bp.route("/api/posts/<int:id>", methods=["DELETE"])
-def deletePosts():
-    return jsonify({})
+@bp.route("/api/posts/<int:postId>", methods=["DELETE"])
+def deletePosts(postId):
+    #queueId = request.form.get("queue_id", type=int)
+    #userId = request.form.get("user_id", default=1, type=int)
+
+    if postId: 
+        with db_session() as s:
+            s.query(Post).filter(
+                Post.id == postId
+            ).delete()
+            s.commit()
+
+            return { "msg": f"Post '{postId}' deleted." }, status.HTTP_200_OK
+
+    return { f"msg": "An error occured on deleting post." }, status.HTTP_401_BAD_REQUEST
