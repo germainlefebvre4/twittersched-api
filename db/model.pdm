@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project Name="Sans titre1" Author="germainlef" Version="1.0" Date="02/04/2020" DefaultPackage="1">
+  <Package Id="1" Name="Core" Description="" Color="-1">
+    <Table X="244" Y="176" Width="160" Height="84" Id="1" Name="configuration" Comment="">
+      <Key Name="id" Comment="" Size="11" Type="Integer" IsNull="False" IsIndex="False" IsUnique="False" IsPrimary="True" AutoIncrement="False" DefaultValue="" />
+      <Key Name="key" Comment="" Size="255" Type="Text" IsNull="False" IsIndex="False" IsUnique="True" IsPrimary="False" AutoIncrement="False" DefaultValue="" />
+      <Key Name="value" Comment="" Size="255" Type="Text" IsNull="True" IsIndex="False" IsUnique="False" IsPrimary="False" AutoIncrement="False" DefaultValue="" />
+    </Table>
+    <Table X="703" Y="295" Width="160" Height="148" Id="2" Name="application" Comment="">
+      <Key Name="id_env" Comment="" Size="11" Type="Integer" IsNull="False" IsIndex="False" IsUnique="False" IsPrimary="True" AutoIncrement="False" DefaultValue="" />
+      <Key Name="name" Comment="" Size="255" Type="Text" IsNull="False" IsIndex="False" IsUnique="True" IsPrimary="False" AutoIncrement="False" DefaultValue="" />
+      <Key Name="country" Comment="" Size="255" Type="Text" IsNull="True" IsIndex="False" IsUnique="False" IsPrimary="False" AutoIncrement="False" DefaultValue="" />
+      <Key Name="datacenter" Comment="" Size="255" Type="Text" IsNull="True" IsIndex="False" IsUnique="False" IsPrimary="False" AutoIncrement="False" DefaultValue="" />
+      <Key Name="platform" Comment="" Size="255" Type="Text" IsNull="True" IsIndex="False" IsUnique="False" IsPrimary="False" AutoIncrement="False" DefaultValue="" />
+      <Key Name="region" Comment="" Size="255" Type="Text" IsNull="True" IsIndex="False" IsUnique="False" IsPrimary="False" AutoIncrement="False" DefaultValue="" />
+      <Key Name="environment" Comment="" Size="0" Type="Text" IsNull="True" IsIndex="False" IsUnique="False" IsPrimary="False" AutoIncrement="False" DefaultValue="" />
+    </Table>
+  </Package>
+</Project>
