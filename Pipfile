@@ -4,16 +4,17 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pytest = "*"
+pytest-cov = "*"
 
 [packages]
 flask = "*"
 flask-api = "*"
 flask-cors = "*"
-pytest = "*"
-pytest-cov = "*"
-influxdb = "*"
-tinydb = "*"
 python-dotenv = "*"
+psycopg2 = "*"
+sqlalchemy = "*"
+flask-sqlalchemy = "*"
 
 [requires]
 python_version = "3"

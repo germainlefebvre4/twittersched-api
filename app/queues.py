@@ -8,9 +8,9 @@ import sys
 import datetime as dt
 import inspect
 import json
-from tinydb import Query
 
-from app.db import get_db
+from app.models import User, Queue, Post
+from app.database import db_session
 
 bp = Blueprint("queues", __name__)
 
@@ -18,14 +18,23 @@ bp = Blueprint("queues", __name__)
 @bp.route("/api/queues", methods=["GET"])
 def getQueues():
     data = []
+    queueId = request.args.get("queue_id", type=int)
     page_offset = request.args.get("page", default=0, type=int)
-    page_limit = 2
+    page_limit = 10
 
-    # Database select
-    db = get_db()
-    table = db.table('queues')
-    Queue = Query()
-    data = table.search(Queue.user == 1)[page_offset*page_limit:page_offset*page_limit + page_limit]
+    with db_session() as s:
+        data_queues = s.query(Queue).filter(
+            Queue.user_id == 1
+        ).limit(page_limit).offset(page_offset)
+        for queue in data_queues:
+            print(queue.id)
+        data = [
+            {
+                "id": x.id,
+                "name": x.name
+            }
+            for x in data_queues
+        ]
 
     return jsonify(data)
 
@@ -33,24 +42,6 @@ def getQueues():
 def postQueues():
     queueName = request.form.get("queue_name")
     userId = request.form.get("user_id", default=1, type=int)
-
-    db = get_db()
-    Queue = Query()
-    table = db.table('queues')
-    rows = table.search(
-      (Queue.user == userId) &
-      (Queue.name == queueName)
-    )
-    if len(rows) > 0:
-        current_app.logger.info("Queue '{}' already exists.".format(queueName))
-        return { "msg": "Queue '{}' already exists.".format(queueName) }, status.HTTP_409_CONFLICT
-
-    table.insert(
-      {
-        "name": queueName,
-        "user": userId
-      }
-    )
 
     return { "msg": "Queue '{}' created.".format(queueName) }, status.HTTP_201_CREATED
 

@@ -8,9 +8,10 @@ import sys
 import datetime as dt
 import inspect
 import json
-from tinydb import Query
 
-from app.db import get_db
+from app.models import User, Queue, Post
+from app.database import db_session
+
 
 bp = Blueprint("users", __name__)
 
@@ -22,10 +23,10 @@ def getUsers():
     page_limit = 2
 
     # Database select
-    db = get_db()
-    table = db.table('users')
-    User = Query()
-    data = table.get(doc_id=1)
+    with db_session() as s:
+        data_queues = s.query(Queue)
+        for queue in data_queues:
+            print(queue.id)
 
     return jsonify(data)
 
@@ -34,22 +35,6 @@ def postUsers():
     paramUserName = request.form.get("username")
 
     userName = "{}".format(paramUserName)
-
-    db = get_db()
-    User = Query()
-    table = db.table('users')
-    rows = table.search(
-      (User.username == userName)
-    )
-    if len(rows) > 0:
-        current_app.logger.info("User '{}' already exists.".format(userName))
-        return { "msg": "User '{}' already exists.".format(userName) }, status.HTTP_409_CONFLICT
-
-    table.insert(
-      {
-        "username": userName,
-      }
-    )
 
     return { "msg": "User '{}' created.".format(userName) }, status.HTTP_201_CREATED
 
