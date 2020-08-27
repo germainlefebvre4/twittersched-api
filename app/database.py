@@ -32,6 +32,7 @@ def db_session():
         bind=engine,
         autocommit=False,
         autoflush=False,
+        expire_on_commit=False,
     ))
     try:
         yield session
@@ -68,12 +69,13 @@ def test_db():
 
 
 def init_db():
-    print("init_db")
-    #Base.metadata.drop_all(bind=engine)
-    #Base.metadata.create_all(bind=engine)
+    Base.metadata.drop_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
+
+def drop_db():
+    Base.metadata.drop_all(bind=engine)
 
 def init_app(app):
-    print("init_app")
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
 

@@ -30,7 +30,7 @@ def getUsers():
         data = [
             {
                 "id": x.id,
-                "username": x.username
+                "email": x.email
             }
             for x in data_users
         ]
@@ -39,7 +39,7 @@ def getUsers():
 
 
 @bp.route("/api/users", methods=["POST"])
-def userUsers():
+def postUsers():
     userName = request.form.get("user_name", type=str)
 
     if userName:

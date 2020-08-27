@@ -11,3 +11,9 @@ exec:
 
 logs:
 	docker logs bspauto-batch
+
+serve:
+	pipenv run flask run --host="0.0.0.0" --port=8080
+
+test:
+	pipenv run python -m unittest app/tests/test*.py
