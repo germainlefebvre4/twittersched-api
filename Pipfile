@@ -18,6 +18,7 @@ psycopg2 = "*"
 sqlalchemy = "*"
 pyjwt = "*"
 flask-bcrypt = "*"
+flask-jwt-extended = "*"
 
 [requires]
 python_version = "3"

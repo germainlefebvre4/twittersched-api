@@ -9,6 +9,10 @@ from sqlalchemy.orm import scoped_session
 
 from app.database import db_session
 
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
 
 
 #def create_app(test_config=None):
@@ -30,6 +34,10 @@ bcrypt = Bcrypt(app)
 from app.database import *
 init_app(app)
 
+# JWT
+app.config['JWT_SECRET_KEY'] = 'super-secret'
+jwt = JWTManager(app)
+
 # Load endpoints
 from . import users
 app.register_blueprint(users.bp)
@@ -39,7 +47,5 @@ from . import queues
 app.register_blueprint(queues.bp)
 from . import auth
 app.register_blueprint(auth.bp)
-from . import dashboard
-app.register_blueprint(dashboard.bp)
 
 #return app
